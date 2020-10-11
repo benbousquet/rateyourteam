@@ -25,7 +25,7 @@ func GetUsers(c *fiber.Ctx) {
 func GetUser(c *fiber.Ctx) {
 	var user User
 	id := c.Params("id")
-	database.DBConn.First(&user, id)
+	database.DBConn.First(&user, "name = ?", id)
 	if user.Name == "" {
 		c.Status(500).Send("Cannot find user with the ID of ", id)
 		return
@@ -37,7 +37,7 @@ func GetUser(c *fiber.Ctx) {
 func UplikeUser(c *fiber.Ctx) {
 	var user User
 	id := c.Params("id")
-	database.DBConn.First(&user, id)
+	database.DBConn.First(&user, "name = ?", id)
 
 	database.DBConn.Model(&user).Update("Uplike", (user.Uplike + 1))
 	c.JSON(user)
@@ -48,7 +48,7 @@ func UplikeUser(c *fiber.Ctx) {
 func DownlikeUser(c *fiber.Ctx) {
 	var user User
 	id := c.Params("id")
-	database.DBConn.First(&user, id)
+	database.DBConn.First(&user, "name = ?", id)
 
 	database.DBConn.Model(&user).Update("Downlike", (user.Downlike + 1))
 	c.JSON(user)

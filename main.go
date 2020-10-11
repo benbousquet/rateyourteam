@@ -5,6 +5,7 @@ import (
 
 	"github.com/benbousquet/rateyourteam/database"
 	"github.com/benbousquet/rateyourteam/user"
+	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 	"github.com/jinzhu/gorm"
 )
@@ -30,22 +31,24 @@ func setup(app *fiber.App) {
 	api.Get("/user/:id", user.GetUser)
 
 	// POST /user add a user
-	api.Post("/uplike", user.UplikeUser)
+	api.Get("/uplike/:id", user.UplikeUser)
 
 	// POST /user downlike a user
-	api.Post("/downlike", user.DownlikeUser)
+	api.Get("/downlike/:id", user.DownlikeUser)
 
 	// POST /user add a user
-	api.Post("/downlike", user.NewUser)
+	api.Post("/user", user.NewUser)
 }
 
 func main() {
 	app := fiber.New()
+
+	app.Use(cors.New())
 
 	initDatabase()
 	defer database.DBConn.Close()
 
 	setup(app)
 
-	app.Listen(":3000")
+	app.Listen(":3001")
 }
