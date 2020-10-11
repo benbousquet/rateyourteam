@@ -11,14 +11,14 @@ let getUser = (id, setUser, setSearched) => {
     return;
   }
   axios
-    .get(`http://localhost/api/v1/user/${id}`)
+    .get(`https://rateyourteam.herokuapp.com/api/v1/user/${id}`)
     .then((res) => {
       setUser(res.data);
       setSearched(true);
     })
     .catch((err) => {
       axios
-        .post(`http://localhost/api/v1/user`, {
+        .post(`https://rateyourteam.herokuapp.com/api/v1/user`, {
           name: id,
           uplike: 0,
           downlike: 0,
@@ -31,15 +31,19 @@ let getUser = (id, setUser, setSearched) => {
 };
 
 let uplike = (id, setUser) => {
-  axios.get(`http://localhost/api/v1/uplike/${id}`).then((res) => {
-    setUser(res.data);
-  });
+  axios
+    .get(`https://rateyourteam.herokuapp.com/api/v1/uplike/${id}`)
+    .then((res) => {
+      setUser(res.data);
+    });
 };
 
 let downlike = (id, setUser) => {
-  axios.get(`http://localhost/api/v1/downlike/${id}`).then((res) => {
-    setUser(res.data);
-  });
+  axios
+    .get(`https://rateyourteam.herokuapp.com/api/v1/downlike/${id}`)
+    .then((res) => {
+      setUser(res.data);
+    });
 };
 
 function App() {
