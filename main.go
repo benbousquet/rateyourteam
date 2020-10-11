@@ -2,17 +2,21 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/benbousquet/rateyourteam/database"
 	"github.com/benbousquet/rateyourteam/user"
 	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 )
 
 func initDatabase() {
 	var err error
-	database.DBConn, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=rateyourteam password=postgres sslmode=disable")
+	godotenv.Load()
+	dbInfo := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", os.Getenv("db_host"), os.Getenv("db_port"), os.Getenv("db_user"), os.Getenv("db_name"), os.Getenv("db_pass"))
+	database.DBConn, err = gorm.Open("postgres", dbInfo)
 	if err != nil {
 		panic(err)
 	}
@@ -38,6 +42,8 @@ func setup(app *fiber.App) {
 
 	// POST /user add a user
 	api.Post("/user", user.NewUser)
+
+	app.Static("/", "./client/build")
 }
 
 func main() {
@@ -50,5 +56,5 @@ func main() {
 
 	setup(app)
 
-	app.Listen(":3001")
+	app.Listen(":80")
 }
